@@ -38,6 +38,13 @@ extern void test_stringlength_a(void);
 extern void test_stringlength_alphabet(void);
 extern void test_getfilteredstring_comp(void);
 extern void test_getfilteredstring_comp183(void);
+extern void test_doublearraysize_nullsize(void);
+extern void test_getfilteredstring_nullprompt(void);
+extern void test_getfilteredstring_nullfilter(void);
+extern void test_getfilteredstring_emptyfilter(void);
+extern void test_getfilteredstring_nullerror(void);
+extern void test_getfilteredstring_duplicatefilter(void);
+extern void test_getFilteredString_largeInput(void);
 
 
 //=======Test Reset Option=====
@@ -52,7 +59,7 @@ void resetTest(void)
 //=======MAIN=====
 int main(void)
 {
-  UnityBegin("L30test.c");
+  UnityBegin("30test.c");
   RUN_TEST(test_doublearraysize_null, 13);
   RUN_TEST(test_doublearraysize_empty, 21);
   RUN_TEST(test_doublearraysize_a, 29);
@@ -62,7 +69,14 @@ int main(void)
   RUN_TEST(test_stringlength_a, 55);
   RUN_TEST(test_stringlength_alphabet, 59);
   RUN_TEST(test_getfilteredstring_comp, 63);
-  RUN_TEST(test_getfilteredstring_comp183, 71);
+  RUN_TEST(test_getfilteredstring_comp183, 72);
+  RUN_TEST(test_doublearraysize_nullsize, 83);
+  RUN_TEST(test_getfilteredstring_nullprompt, 89);
+  RUN_TEST(test_getfilteredstring_nullfilter, 98);
+  RUN_TEST(test_getfilteredstring_emptyfilter, 107);
+  RUN_TEST(test_getfilteredstring_nullerror, 116);
+  RUN_TEST(test_getfilteredstring_duplicatefilter, 123);
+  RUN_TEST(test_getFilteredString_largeInput, 132);
 
   return (UnityEnd());
 }

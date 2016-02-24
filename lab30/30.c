@@ -63,17 +63,13 @@ unsigned stringLength(char *string) {
 // chars in the string are present in the filter string.
 char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
    unsigned i = 0, j = 0, size = INITIAL_SIZE;
-   char input;
-   _Bool filterTable[NUM_CHARS];
+   int input;
+   _Bool filterTable[NUM_CHARS] = {false};
    char *tmp = NULL;
    char *output = calloc(INITIAL_SIZE, sizeof(char));
    
-   // Initialize boolean array to false, then iterate through
-   // filter string and flip values corresponding to ASCII key
+   // Iterate through filter string and flip values corresponding to ASCII key
    // for each character to true
-   for (i = 0; i < NUM_CHARS; i++) {
-      filterTable[i] = 0;
-   }
    i = 0;
    if(filter && *filter) {
       while (true) {
@@ -97,7 +93,7 @@ char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
    while (input !='\n' && input != EOF) {
       // If the array holding the input string is full,
       // request a new array of double the size
-      if (j == size) {
+      if (j == (size - 1)) {
          tmp = doubleArraySize(output, &size);
          free(output);
          output = tmp;
@@ -111,6 +107,7 @@ char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
          if(errorMessage) {
             *errorMessage = "Found invalid character";
          }
+         free(output);
          return NULL;
       }
       input = getc(stdin);
