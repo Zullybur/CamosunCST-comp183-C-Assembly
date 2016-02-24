@@ -20,7 +20,7 @@ void test_getInt(void) {
 void test_getLong(void) {
 	freopen("40test1.txt", "r", stdin);
 	long result = getLong();
-	TEST_ASSERT_EQUAL_INT64(2999999999L, result);
+	TEST_ASSERT_EQUAL_INT64(4999999999L, result);
 }
 
 void test_getUnsigned(void) {

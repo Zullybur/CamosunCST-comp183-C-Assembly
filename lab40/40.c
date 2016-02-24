@@ -5,39 +5,39 @@
 #include "io.h"
 #include "40.h"
 
-// void merge(int a[], int low, int mid, int high)
-// {
-//     int b[10000];
-//     int i = low, j = mid + 1, k = 0;
+void merge(int a[], int low, int mid, int high)
+{
+    int b[10000];
+    int i = low, j = mid + 1, k = 0;
   
-//     while (i <= mid && j <= high) {
-//         if (a[i] <= a[j])
-//             b[k++] = a[i++];
-//         else
-//             b[k++] = a[j++];
-//     }
-//     while (i <= mid)
-//         b[k++] = a[i++];
+    while (i <= mid && j <= high) {
+        if (a[i] <= a[j])
+            b[k++] = a[i++];
+        else
+            b[k++] = a[j++];
+    }
+    while (i <= mid)
+        b[k++] = a[i++];
   
-//     while (j <= high)
-//         b[k++] = a[j++];
+    while (j <= high)
+        b[k++] = a[j++];
   
-//     k--;
-//     while (k >= 0) {
-//         a[low + k] = b[k];
-//         k--;
-//     }
-// }
+    k--;
+    while (k >= 0) {
+        a[low + k] = b[k];
+        k--;
+    }
+}
   
-// void mergesort(int a[], int low, int high)
-// {
-//     if (low < high) {
-//         int m = (high + low)/2;
-//         mergesort(a, low, m);
-//         mergesort(a, m + 1, high);
-//         merge(a, low, m, high);
-//     }
-// }
+void mergesort(int a[], int low, int high)
+{
+    if (low < high) {
+        int m = (high + low)/2;
+        mergesort(a, low, m);
+        mergesort(a, m + 1, high);
+        merge(a, low, m, high);
+    }
+}
 
 char* getStars(unsigned stars) {
     switch(stars){
@@ -101,5 +101,18 @@ bool printResorts(struct resortType* resorts, unsigned num, char *fileName) {
 }
 
 void sortResorts(struct resortType *resorts, unsigned num) {
-    
+    if (!arraySize) {
+        return;
+    }
+    struct resortType tmp;
+    unsigned i, j;
+    for (i = 0; i < (arraySize - 1); i++) {
+        for(j = 1; j < arraySize - i; j++) {
+            if (strcmp(resorts[j], resorts[j - 1]) < 0) {
+               tmp = resorts[j];
+               resorts[j] = resorts[j - 1];
+               resorts[j-1] = tmp;
+            }
+        }
+    }
 }
