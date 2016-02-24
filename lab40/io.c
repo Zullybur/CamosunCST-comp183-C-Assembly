@@ -15,7 +15,7 @@
 //#define INT_SIZE (long)(pow(2, 8 * sizeof(int))/2 - 1)
 #define INT_SIZE INT_MAX
 //#define UNSIGNED_SIZE (long)(pow(2, 8 * sizeof(int)) - 1)
-#define UNSIGNED_SIZE UINT_MAX
+#define UNSIGNED_SIZE (unsigned)INT_MAX * 2
 //#define LONG_SIZE (unsigned long)(pow(2, 8 * sizeof(long))/2)
 #define LONG_SIZE LONG_MAX
 // #define uLONG_SIZE (unsigned long)(pow(2, 8 * sizeof(long)))
@@ -28,12 +28,14 @@ void rejectInput(char input) {
     return;
 }
 long verifyNum(long maxTypeValue, bool isSigned) {
+    printf("DEBUG-Entered verifyNum\n");
     bool done = false, first;
-    int input;
+    char input;
     int sign;
     long output, checkSum, revertSum;
 
     while(!done){
+        printf("DEBUG-Entered while-001\n");
         // Initialize variables
         done = true;
         first = true;
@@ -66,22 +68,24 @@ long verifyNum(long maxTypeValue, bool isSigned) {
             // Add good value to output and check for overflow
             checkSum = output;
             output = (output * 10) + (input - '0');
+            printf("DEBUG-Output: %ld\n", output);
             if (output > maxTypeValue) {
+                printf("DEBUG-Output too big\n");
                 rejectInput(input);
                 done = false;
                 break;
             }
             revertSum = (output - (input - '0')) / 10;
             if (revertSum != checkSum) {
+                printf("DEBUG-Output overflow\n");
                 rejectInput(input);
                 done = false;
                 break;
             }
-            //printf("input: %d output: %ld\n",input, output);
             input = getc(stdin);
         } while (input != '\n' && input != EOF);
     }
-    //printf("DEBUG: Returning output %ld * sign %d\n", output, sign);
+    printf("Returning: %ld * %d = %ld\n", output, sign, output * sign);
     return output * sign;
 }
 
@@ -147,19 +151,17 @@ unsigned stringLength(char *string) {
 
 char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
     unsigned i = 0, j = 0, size = INITIAL_SIZE;
-    int input;
-    _Bool filterTable[NUM_CHARS] = {false};
+    char input;
+    _Bool filterTable[NUM_CHARS];
     char *tmp = NULL;
     char *output = calloc(INITIAL_SIZE, sizeof(char));
-    if (!output) {
-        if (errorMessage) {
-            *errorMessage = "Out of memory";
-        }
-        return NULL;
-    }
 
-   // Iterate through filter string and flip values corresponding to ASCII key
-   // for each character to true
+    // Initialize boolean array to false, then iterate through
+    // filter string and flip values corresponding to ASCII key
+    // for each character to true
+    for (i = 0; i < NUM_CHARS; i++) {
+        filterTable[i] = 0;
+    }
     i = 0;
     if(filter && *filter) {
         while (true) {
@@ -183,16 +185,10 @@ char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
     while (input !='\n' && input != EOF) {
         // If the array holding the input string is full,
         // request a new array of double the size
-        if (j == (size - 1)) {
+        if (j == size) {
             tmp = doubleArraySize(output, &size);
             free(output);
             output = tmp;
-        }
-        if (!output) {
-            if (errorMessage) {
-                *errorMessage = "Out of memory";
-            }
-            return NULL;
         }
         // If currect character is 'true' in the filter table,
         // add that character to the output string
@@ -203,11 +199,41 @@ char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
             if(errorMessage) {
                 *errorMessage = "Found invalid character";
             }
-            free(output);
             return NULL;
         }
         input = getc(stdin);
         j++;
     }
     return output;
+}
+
+int main () {
+    int input;
+
+    printf("DEBUG-Int:\t%ld\n", INT_SIZE);
+    printf("DEBUG-Unsigned:\t%ld\n", UNSIGNED_SIZE);
+    printf("DEBUG-Long:\t%lu\n", LONG_SIZE);
+    printf("\nInteger:\t0\nUnsigned:\t1\nLong:\t\t2\n");
+    input = getc(stdin);
+    input = input - '0';
+    rejectInput(input);
+    switch(input){
+        case 0:
+            printf("Please enter an integer value:\n");
+            int output0 = getInt();
+            printf("Input: %d\n", output0);
+            break;
+        case 1:
+            printf("Please enter an unsigned value:\n");
+            unsigned output1 = getUnsigned();
+            printf("Input: %u\n", output1);
+            break;
+        case 2:
+            printf("Please enter a long value:\n");
+            long output2 = getLong();
+            printf("Input: %ld\n", output2);
+            break;
+        default:
+            printf("FATAL ERROR\n");
+    }
 }
