@@ -1,25 +1,22 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * *
  * Author: Matthew Casiro                        *
- * Date: TODO                             *
+ * Date: February 24th 2016                      *
  * Purpose: Validate various user input types    *
-** * * * * * * * * * * * * * * * * * * * * * * * */
+ * * * * * * * * * * * * * * * * * * * * * * * * */
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-//#include "io.h"
+#include "io.h"
 
 #define INITIAL_SIZE 10
 #define NUM_CHARS 256
-//#define INT_SIZE (long)(pow(2, 8 * sizeof(int))/2 - 1)
 #define INT_SIZE INT_MAX
-//#define UNSIGNED_SIZE (long)(pow(2, 8 * sizeof(int)) - 1)
 #define UNSIGNED_SIZE UINT_MAX
-//#define LONG_SIZE (unsigned long)(pow(2, 8 * sizeof(long))/2)
 #define LONG_SIZE LONG_MAX
-// #define uLONG_SIZE (unsigned long)(pow(2, 8 * sizeof(long)))
 
+// Clear input buffer from stdin
 void rejectInput(char input) {
     printf("Input invalid, try again:\n");
     while(input != '\n' && input != EOF){
@@ -27,6 +24,7 @@ void rejectInput(char input) {
     }
     return;
 }
+// Verify input from stdin matches requirements for selected number data type
 long verifyNum(long maxTypeValue, bool isSigned) {
     bool done = false, first;
     int input;
@@ -77,25 +75,23 @@ long verifyNum(long maxTypeValue, bool isSigned) {
                 done = false;
                 break;
             }
-            //printf("input: %d output: %ld\n",input, output);
             input = getc(stdin);
         } while (input != '\n' && input != EOF);
     }
-    //printf("DEBUG: Returning output %ld * sign %d\n", output, sign);
     return output * sign;
 }
-
+// Check against max integer magnitude and allow a signed result
 int getInt() {
     bool isSigned = true;
     long temp = verifyNum(INT_SIZE, isSigned);
     return (int)temp;
 }
-
+// Check against max long magnitude and allow a signed result
 long getLong() {
     bool isSigned = true;
     return verifyNum(LONG_SIZE, isSigned);
 }
-
+// Check against max unsigned magnitude and disallow a signed result
 unsigned getUnsigned() {
     bool isSigned = false;
     long temp = verifyNum(UNSIGNED_SIZE, isSigned);
@@ -131,7 +127,7 @@ unsigned getUnsigned() {
     *size = newSize;
     return newArray;
 }
-
+// Return the length of a provided '\0' terminated string
 unsigned stringLength(char *string) {
     unsigned length = 0;
 
@@ -144,7 +140,8 @@ unsigned stringLength(char *string) {
     }
     return length;
 }
-
+// Check input string from stdin against a set of filter characters, return
+// input string if valid, and null if false
 char *getFilteredString(char *prompt, char *filter, char **errorMessage) {
     unsigned i = 0, j = 0, size = INITIAL_SIZE;
     int input;
